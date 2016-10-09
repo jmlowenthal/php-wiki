@@ -1,9 +1,13 @@
 <?php
 
-$path = ".";
+$origPath = $path = ".";
 if (isset($_GET["id"])) {
 	$path .= $_GET["id"];
 }
+
+$urlPath = 'notes/';
+
+$title = $path;
 
 $doc = "";
 if (!file_exists($path)){
@@ -15,23 +19,26 @@ else {
 		// Directory found
 		function iterate($itr) {
 			$list = "<ul>";
+
+			global $urlPath;
 			
 			foreach ($itr as $file) {				
 				if ($file->isDot()) continue;
 				if ($file->isFile() && $file->getExtension() != "md") continue;
+				if ($file->getFilename() === 'img') continue;
+				if ($file->getFilename() === 'parsedown') continue;
+				if ($file->getFilename()[0] === '.') continue;
 				
 				$path = substr(str_replace("\\", "/", $file->getPathname()), 2);
-				
-				$isFolder = $file->hasChildren();
-				$list .= "<li".($isFolder ? " style=\"order: -1\"":"")."><a href='/wiki/".$path."'>";
-				if ($isFolder) {
-					$list .= "<b>".$file->getFilename()."</b>";
+				$list .= "<li>";
+				if ($file->hasChildren()) {
+					$list .= "<b><a href='/{$urlPath}{$path}'>{$file->getFilename()}</a></b>";
 					$list .= iterate($file->getChildren());
 				}
 				else {
-					$list .= $file->getFilename();
+					$list .= "<a href='/{$urlPath}{$path}'>{$file->getFilename()}</a>";
 				}
-				$list .= "</a></li>";
+				$list .= "</li>\n";
 			}
 			$list .= "</ul>";
 			return $list;
@@ -40,34 +47,24 @@ else {
 		$doc .= iterate(new RecursiveDirectoryIterator($path, FileSystemIterator::CURRENT_AS_SELF | FileSystemIterator::SKIP_DOTS));
 	}
 	else {
-		$exts = [
-			"markdown.extensions.abbr",
-			"markdown.extensions.footnotes",
-			"markdown.extensions.tables",
-			"markdown.extensions.sane_lists",
-			"markdown.extensions.smarty",
-			"markdown.extensions.toc",
-			"markdown.extensions.fast-katex"
-		];
-		$cmd = "python -m markdown";
-		foreach ($exts as $ext) {
-			$cmd .= " -x ".$ext;
-		}
-		$cmd .= " \"".$path."\"";
-		
-		$handle = popen($cmd, "r");
-		$doc .= fread($handle, 30000000);
-		pclose($handle);
+		require "./parsedown/Parsedown.php";
+		require "./parsedown/MathsParsedown.php";
+		$parsedown = new MathsParsedown();
+		$doc = $parsedown->text(file_get_contents($path));
+
+		$fileInfo = pathinfo(substr($path, strlen($origPath)));
+		$title = $fileInfo['filename'] . ' - ' . '/' . trim(str_replace('\\', '/', $fileInfo['dirname']), '/') . '/';
 	}
 }
+
 
 ?>
 
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?=$path?></title>
-		<link rel="stylesheet" href="/wiki/style.css"/>
+		<title><?=$title?></title>
+		<link rel="stylesheet" href="/<?= $urlPath ?>style.css"/>
 		<style>
 			#path {
 				position: fixed;
@@ -89,10 +86,26 @@ else {
 				padding: 0.5em 1em;
 				text-decoration: none;
 			}
+			@media print {
+				#path, #up {
+					display: none;
+				}
+				#wrapper {
+					max-width: unset;
+					width: unset;
+				}
+			}
+			table th {
+				text-transform: none;
+			}
 		</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/contrib/auto-render.min.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=ml&amp;lang=sql"></script>
 	</head>
 	<body>
-		<a id="up" href="/wiki/<?=substr($path, 2, strrpos($path, "/", -2) - 1)?>">&uarr;</a>
+		<a id="up" href="/<?=$urlPath . substr($path, 2, strrpos($path, "/", -2) - 1)?>">&uarr;</a>
 		<div id="wrapper">
 			<?php
 				if ($doc != "") echo $doc;
@@ -100,5 +113,12 @@ else {
 			?>
 		</div>
 		<pre id="path"><?=$path?></pre>
+
+<script>renderMathInElement(document.getElementById("wrapper"), {
+	delimiters: [
+		{ left: "$$", right: "$$", display: true },
+		{ left: "$", right: "$", display: false }
+	]
+});</script>
 	</body>
 </html>
