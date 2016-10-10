@@ -20,13 +20,16 @@ class MathsParsedown extends Parsedown {
 		$marker = preg_quote($Excerpt['text'][0], '/');
 		if (preg_match('/^('.$marker.'+)[ ]*(.+?)[ ]*(?<!'.$marker.')\1(?!'.$marker.')/s', $Excerpt['text'], $matches))
 		{
-			$text = $matches[0];
+			$text = $matches[2];
 			$text = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
 			//$text = preg_replace("/[ ]*\n/", ' ', $text);
 			return array(
 				'extent' => strlen($matches[0]),
 				'element' => array(
 					'name' => 'span',
+					'attributes' => array(
+						'class' => 'math'.(strlen($matches[1]) > 1 ? ' display' : '')
+					),
 					'text' => $text,
 				),
 			);

@@ -1,13 +1,38 @@
 <?php
 
-$origPath = $path = ".";
+$basepath = $path = ".";
 if (isset($_GET["id"])) {
 	$path .= $_GET["id"];
 }
 
-$urlPath = 'notes/';
+$urlPath = 'wiki/';
 
 $title = $path;
+
+function buildTreeItr($itr) {
+	$arr = array();
+	foreach ($itr as $file) {
+		if ($file->isDot()) continue;
+		if ($file->isFile() && $file->getExtension() !== "md") continue;
+		if ($file->getFilename()[0] === ".") continue;
+		
+		$path = substr(str_replace("\\", "/", $file->getPathname()), 2);
+		if ($file->hasChildren()) {
+			$children = buildTreeItr($file->getChildren());
+			if (count($children) > 0) {
+				$arr[$file->getFilename()] = array($path, $children);
+			}
+		}
+		else {
+			$arr[$file->getFilename()] = array($path);
+		}
+	}
+	return $arr;
+}
+
+function buildTree($path) {
+	return buildTreeItr(new RecursiveDirectoryIterator($path, FileSystemIterator::CURRENT_AS_SELF | FileSystemIterator::SKIP_DOTS));
+}
 
 $doc = "";
 if (!file_exists($path)){
@@ -17,34 +42,26 @@ else {
 	// Check for file, then dir
 	if (is_dir($path)){
 		// Directory found
-		function iterate($itr) {
-			$list = "<ul>";
-
+		$tree = buildTree($path);
+		
+		function htmlTree($arr) {
 			global $urlPath;
-			
-			foreach ($itr as $file) {				
-				if ($file->isDot()) continue;
-				if ($file->isFile() && $file->getExtension() != "md") continue;
-				if ($file->getFilename() === 'img') continue;
-				if ($file->getFilename() === 'parsedown') continue;
-				if ($file->getFilename()[0] === '.') continue;
-				
-				$path = substr(str_replace("\\", "/", $file->getPathname()), 2);
-				$list .= "<li>";
-				if ($file->hasChildren()) {
-					$list .= "<b><a href='/{$urlPath}{$path}'>{$file->getFilename()}</a></b>";
-					$list .= iterate($file->getChildren());
+			$html = "<ul>";
+			foreach($arr as $name => $item) {
+				$html .= "<li>";
+				if (isset($item[1])) {
+					$html .= "<b><a href=\"{$item[0]}\">{$name}</a></b>";
+					$html .= htmlTree($item[1]);
 				}
 				else {
-					$list .= "<a href='/{$urlPath}{$path}'>{$file->getFilename()}</a>";
+					$html .= "<a href=\"/{$urlPath}{$item[0]}\">{$name}</a>";
 				}
-				$list .= "</li>\n";
+				$html .= "</li>";
 			}
-			$list .= "</ul>";
-			return $list;
+			return $html."</ul>";
 		}
 		
-		$doc .= iterate(new RecursiveDirectoryIterator($path, FileSystemIterator::CURRENT_AS_SELF | FileSystemIterator::SKIP_DOTS));
+		$doc .= htmlTree($tree);
 	}
 	else {
 		require "./parsedown/Parsedown.php";
@@ -52,11 +69,9 @@ else {
 		$parsedown = new MathsParsedown();
 		$doc = $parsedown->text(file_get_contents($path));
 
-		$fileInfo = pathinfo(substr($path, strlen($origPath)));
-		$title = $fileInfo['filename'] . ' - ' . '/' . trim(str_replace('\\', '/', $fileInfo['dirname']), '/') . '/';
+		$title = $path;
 	}
 }
-
 
 ?>
 
@@ -101,7 +116,6 @@ else {
 		</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/contrib/auto-render.min.js"></script>
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=ml&amp;lang=sql"></script>
 	</head>
 	<body>
@@ -114,11 +128,22 @@ else {
 		</div>
 		<pre id="path"><?=$path?></pre>
 
-<script>renderMathInElement(document.getElementById("wrapper"), {
-	delimiters: [
-		{ left: "$$", right: "$$", display: true },
-		{ left: "$", right: "$", display: false }
-	]
-});</script>
+<script>
+	window.addEventListener("load", function() {
+		Array.from(document.getElementsByClassName("math")).forEach(function(el) {
+			katex.render(el.textContent, el, {
+				throwOnError: false,
+				displayMode: el.classList.contains("display")
+			});
+		});
+	});
+	
+	window.addEventListener("load", function() {
+		var topheaders = document.getElementsByTagName("h1");
+		if (topheaders.length == 1) {
+			document.title = topheaders[0].textContent;
+		}
+	});
+</script>
 	</body>
 </html>
