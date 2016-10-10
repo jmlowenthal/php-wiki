@@ -1,0 +1,352 @@
+/*
+   Modified from a file with the following copyright notice:
+
+   This document has been created with Marked.app <http://marked2app.com>
+   Please leave this notice in place, along with any additional credits below.
+   ---------------------------------------------------------------
+   Title: Kult
+   Author: Peter Sziebig - @bigpe
+   Description: Easy to read
+*/
+
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 300;
+    src: local("Ubuntu Light"), local("Ubuntu-Light"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/WtcvfJHWXKxx4x0kuS1kobO3LdcAZYWl9Si6vvxL-qU.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Ubuntu"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/CGXpU_uR_FUfdeyCjAWgZ-vvDin1pK8aKteLpeZ5c0A.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 500;
+    src: local("Ubuntu Medium"), local("Ubuntu-Medium"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/gMhvhm-nVj1086DvGgmzB7O3LdcAZYWl9Si6vvxL-qU.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Ubuntu Bold"), local("Ubuntu-Bold"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/nsLtvfQoT-rVwGTHHnkeJrO3LdcAZYWl9Si6vvxL-qU.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    font-style: italic;
+    font-weight: 300;
+    src: local("Ubuntu Light Italic"), local("Ubuntu-LightItalic"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/DZ_YjBPqZ88vcZCcIXm6VqfTCPadK0KLfdEfFtGWCYw.woff") format("woff");
+}
+
+html {
+	color: #57534A;
+	font-family: "Ubuntu","Myriad Pro","Myriad",sans-serif;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 1.4;
+}
+
+#wrapper::after {
+	clear: both;
+	content: "";
+	display: table;
+}
+
+#wrapper {
+	margin-left: auto;
+	margin-right: auto;
+	width: 800px;
+	max-width: 80%;
+}
+
+h1, h2, h3, dt {
+	color: #423F37;
+	font-weight: 700;
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
+}
+
+h2, .article-list .article-title {
+	font-size: 1.5em;
+	margin: 0.83em 0;
+}
+
+h3, dt {
+	font-size: 1.17em;
+	margin: 1em 0;
+}
+
+h4 {
+	font-size: 1em;
+	margin: 1.33em 0;
+}
+
+h5 {
+	font-size: 0.83em;
+	margin: 1.67em 0;
+}
+
+h6 {
+	font-size: 0.75em;
+	margin: 2.33em 0;
+}
+
+a {
+	color: #8DB359;
+	cursor: pointer;
+	outline: 0 none;
+	text-decoration: underline;
+}
+
+a:hover {
+	outline: 0 none;
+	color: #739544;
+}
+
+p, pre {
+	margin: 1em 0;
+}
+code, kbd, pre, samp {
+	font-family: monospace,serif;
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+}
+pre {
+	white-space: pre;
+	background-color: #F8F5F0;
+	overflow-x: auto;
+	padding: 1.3rem;
+	position: relative;
+}
+
+code {
+	color: #423F37;
+}
+
+aside {
+	display: block;
+	float: right;
+	width: 390px;
+}
+
+
+b, strong {
+	color: #423F37;
+	font-weight: 700;
+}
+
+blockquote {
+	margin: 0.6em 0;
+	padding: 0.1em 40px;
+	border-left: 2px solid #ddd;
+}
+
+blockquote > *:first-child {
+	margin-top: 0.4em;
+}
+blockquote > *:last-child {
+	margin-bottom: 0.4em;
+}
+
+hr {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	border-color: -moz-use-text-color -moz-use-text-color #ECE6DA;
+	border-image: none;
+	border-style: none none solid;
+	border-width: medium medium 1px;
+	margin: 3em 6em;
+}
+
+figure {
+	margin-left: -4.5rem;
+	margin-right: -4.5rem;
+	margin-bottom: 2em;
+	margin-top: 2em;
+}
+
+img, svg {
+	max-width: 100%;
+	border: 0 none;
+	page-break-inside: avoid;
+	display: block;
+	margin: auto;
+}
+
+img.inline, svg.inline {
+	display: inline;
+	margin: 0;
+}
+
+line, polyline {
+	stroke: black;
+	fill: none;
+}
+
+ol > li:before {
+	color: #423F37;
+	content: counter(ol, decimal) ".";
+	counter-increment: ol;
+	font-weight: 700;
+	margin-right: 0.333em;
+	position: absolute;
+	right: 100%;
+}
+
+ol, ul, dl {
+	display: flex;
+	flex-direction: column;
+
+	margin-left: 2rem;
+	padding: 0;
+}
+ol {
+	counter-reset: ol;
+}
+li + li, dd + dt {
+	margin-top: 0.5em;
+}
+
+ul > li {
+	position: relative;
+}
+
+ol > li {
+	position: relative;
+}
+
+li {
+	list-style: none outside none;
+}
+
+figure > figcaption {
+	margin-top: 0.5em;
+}
+small, dd, figcaption {
+	color: #A19C91;
+	display: block;
+	font-size: 0.8rem;
+	font-style: italic;
+	line-height: 1.2;
+}
+
+.center {
+	display: block;
+	margin: 0 auto;
+}
+
+/* Tables */
+*:not(.table-plain) > table {
+	margin-bottom: 2em;
+	font-size: 0.8em;
+	padding: 0;
+	border-collapse: collapse;
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, .2);
+	width: 80%;
+	margin: 0 auto 2em auto
+}
+*:not(.table-plain) > table th,
+*:not(.table-plain) > table td {
+	padding: 10px 10px 9px;
+	line-height: 18px;
+	text-align: left
+}
+*:not(.table-plain) > table th {
+	padding-top: 9px;
+	text-transform: uppercase;
+	vertical-align: middle
+}
+*:not(.table-plain) > table td {
+	vertical-align: top;
+	border-top: 1px solid #ddd;
+}
+*:not(.table-plain) > table tbody th {
+	border-top: 1px solid #ddd;
+	vertical-align: top
+}
+*:not(.table-plain) > table {
+	border: 1px solid #ddd;
+	border-collapse: separate;
+	border-radius: 4px
+}
+*:not(.table-plain) > table th+th,
+*:not(.table-plain) > table td+td,
+*:not(.table-plain) > table th+td {
+	border-left: 1px solid #ddd
+}
+*:not(.table-plain) > table thead tr:first-child th:first-child,
+*:not(.table-plain) > table tbody tr:first-child td:first-child {
+	border-radius: 4px 0 0 0
+}
+*:not(.table-plain) > table thead tr:first-child th:last-child,
+*:not(.table-plain) > table tbody tr:first-child td:last-child {
+	border-radius: 0 4px 0 0
+}
+*:not(.table-plain) > table tbody tr:last-child td:first-child {
+	border-radius: 0 0 0 4px
+}
+*:not(.table-plain) > table tbody tr:last-child td:last-child {
+	border-radius: 0 0 4px 0
+}
+*:not(.table-plain) > table tbody tr:nth-child(odd) {
+	background-color: rgba(0, 0, 0, 0.03)
+}
+caption {
+	display: table-caption;
+	font-weight: 300;
+	font-size: 1.3em;
+	letter-spacing: 2px;
+	word-spacing: .2em;
+	background: rgba(0, 0, 0, .75);
+	color: #EEE;
+	padding: 4px;
+	border-radius: 4px;
+	margin: 4px 0;
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, .35)
+}
+
+
+/* Styles that used to be inline */
+#path {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	padding: 0.5rem;
+	font-size: 0.7rem;
+}
+#wrapper {
+	margin-bottom: 30px;
+}
+#up {
+	position: fixed;
+	display: block;
+	width: 30px;
+	text-align: center;
+	vertical-align: middle;
+	top: 0;
+	left: 0;
+	padding: 0.5em 1em;
+	text-decoration: none;
+}
+@media print {
+	#path, #up {
+		display: none;
+	}
+	#wrapper {
+		max-width: unset;
+		width: unset;
+	}
+}
+

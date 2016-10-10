@@ -63,7 +63,7 @@ else {
 <html>
 	<head>
 		<title><?=$title?></title>
-		<link rel="stylesheet" href="/<?= $urlPath ?>style.css"/>
+		<link rel="stylesheet" href="/<?= $urlPath ?>jack-style.css"/>
 		<style>
 			#path {
 				position: fixed;
