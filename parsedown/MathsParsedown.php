@@ -1,15 +1,19 @@
 <?php
 
-class MathsParsedown extends Parsedown {
+require __DIR__ . '/parsedown/Parsedown.php';
+require __DIR__ . '/parsedown-extra/ParsedownExtra.php';
+
+class MathsParsedown extends ParsedownExtra {
 	public function __construct () {
 		$this->InlineTypes['$'] = array('Maths');
 		$this->inlineMarkerList .= '$';
 
 		$this->BlockTypes['$']  = array('Maths');
-		$this->unmarkedBlockTypes[] = 'Maths';
 
 		$this->InlineTypes['-'] = array('Hyphenator');
 		$this->inlineMarkerList .= '-';
+
+		$this->setMarkupEscaped(FALSE);
 
 		if (function_exists('parent::__construct')) {
 			parent::__construct();
@@ -121,6 +125,17 @@ class MathsParsedown extends Parsedown {
 				'extent' => 2,
 			);
 		}
+	}
+
+	/**
+	 * Allow resuming numbering from non-1
+	 */
+	protected function blockList($Line) {
+		$return = parent::blockList($Line);
+		if (isset($return['element']['attributes']['start'])) {
+			$return['element']['attributes']['style'] = 'counter-reset: ol ' . $return['element']['attributes']['start'];
+		}
+		return $return;
 	}
 
 }

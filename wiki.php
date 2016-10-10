@@ -47,7 +47,6 @@ else {
 		$doc .= iterate(new RecursiveDirectoryIterator($path, FileSystemIterator::CURRENT_AS_SELF | FileSystemIterator::SKIP_DOTS));
 	}
 	else {
-		require "./parsedown/Parsedown.php";
 		require "./parsedown/MathsParsedown.php";
 		$parsedown = new MathsParsedown();
 		$doc = $parsedown->text(file_get_contents($path));
