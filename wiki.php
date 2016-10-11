@@ -48,12 +48,14 @@ else {
 			global $urlPath;
 			$html = "<ul>";
 			foreach($arr as $name => $item) {
-				$html .= "<li>";
+				$html .= "<li";
 				if (isset($item[1])) {
+					$html .= " style='order: -1;'>";
 					$html .= "<b><a href=\"{$item[0]}\">{$name}</a></b>";
 					$html .= htmlTree($item[1]);
 				}
 				else {
+					$html .= ">";
 					$html .= "<a href=\"/{$urlPath}{$item[0]}\">{$name}</a>";
 				}
 				$html .= "</li>";
