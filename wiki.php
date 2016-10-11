@@ -64,7 +64,6 @@ else {
 		$doc .= htmlTree($tree);
 	}
 	else {
-		require "./parsedown/Parsedown.php";
 		require "./parsedown/MathsParsedown.php";
 		$parsedown = new MathsParsedown();
 		$doc = $parsedown->text(file_get_contents($path));
@@ -79,7 +78,7 @@ else {
 <html>
 	<head>
 		<title><?=$title?></title>
-		<link rel="stylesheet" href="/<?= $urlPath ?>style.css"/>
+		<link rel="stylesheet" href="/<?= $urlPath ?>jack-style.css"/>
 		<style>
 			#path {
 				position: fixed;
