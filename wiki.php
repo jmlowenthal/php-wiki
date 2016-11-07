@@ -50,7 +50,7 @@ else {
 			foreach($arr as $name => $item) {
 				$html .= "<li";
 				if (isset($item[1])) {
-					$html .= " style='order: -1;'>";
+					$html .= " style='order: -1;' class='open'>";
 					$html .= "<b><a href=\"{$item[0]}\">{$name}</a></b>";
 					$html .= htmlTree($item[1]);
 				}
@@ -80,7 +80,7 @@ else {
 <html>
 	<head>
 		<title><?=$title?></title>
-		<link rel="stylesheet" href="/<?= $urlPath ?>jack-style.css"/>
+		<link rel="stylesheet" href="/<?= $urlPath ?>style.css"/>
 		<style>
 			#path {
 				position: fixed;
@@ -143,6 +143,26 @@ else {
 		var topheaders = document.getElementsByTagName("h1");
 		if (topheaders.length == 1) {
 			document.title = topheaders[0].textContent;
+		}
+		else {
+			document.title = topheaders[0].textContent;
+			for (var i = 1; i < topheaders.length - 1; ++i) {
+				document.title += ", " + topheaders[i].textContent;
+			}
+			document.title += " and " + topheaders[topheaders.length - 1].textContent;
+		}
+	});
+	
+	Array.from(document.getElementsByTagName("li")).forEach(function(v) {
+		if (v.classList.contains("open") || v.classList.contains("closed")) {
+			v.addEventListener("click", function(e) {
+				e.stopPropagation();
+				var rect = v.getBoundingClientRect();
+				if (e.x < rect.left || e.x > rect.right || e.y < rect.top || e.y > rect.bottom) {
+					this.classList.toggle("open");
+					this.classList.toggle("closed");
+				}
+			});
 		}
 	});
 </script>

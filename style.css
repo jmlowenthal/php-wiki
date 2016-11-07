@@ -46,7 +46,20 @@
     src: local("Ubuntu Light Italic"), local("Ubuntu-LightItalic"), url("http://themes.googleusercontent.com/static/fonts/ubuntu/v4/DZ_YjBPqZ88vcZCcIXm6VqfTCPadK0KLfdEfFtGWCYw.woff") format("woff");
 }
 
+/* KaTeX styles */
+/*
+	Current W3C spec means this doesn't work as it should,
+	the spec means that even though `overflow-y` is `visible` it
+	becomes `auto` for reasons unknown.
+*/
+/*.katex {
+	max-width: 100%;
+	overflow-x: auto;
+	overflow-y: visible;
+}
+*/
 
+/* General styles */
 
 html {
     font-size: 100%;
@@ -90,6 +103,20 @@ h1, h2, h3, dt {
 h1 {
     font-size: 2em;
     margin: 0.67em 0;
+}
+
+/* Title note */
+h1+p>em, h2+p>em, h3+p>em, h4+p>em, h5+p>em, h6+p>em {
+	display: block;
+	margin-left: 1em;
+	margin-top: -0.5em;
+	margin-bottom: 1.5em;
+}
+
+/* Image note */
+img+em {
+	display: block;
+	text-align: center;
 }
 
 h2, .article-list .article-title {
@@ -212,13 +239,18 @@ img, svg {
 	margin: auto;
 }
 
-line, polyline {
+svg {
 	stroke: black;
 	fill: none;
 }
 
+text {
+	stroke: none;
+	fill: black;
+}
 
-ol > li:before {
+
+ol > li::before {
     color: #423F37;
     content: counter(ol, decimal) ".";
     counter-increment: ol;
@@ -228,16 +260,42 @@ ol > li:before {
     right: 100%;
 }
 
-ul > li:before {
+ul > li::before {
     background-color: #423F37;
     border-radius: 14px 14px 14px 14px;
     content: "";
     height: 6px;
+    width: 6px;
     margin-right: 0.333em;
     margin-top: 0.55em;
     position: absolute;
     right: 100%;
-    width: 6px;
+}
+
+ul > li.open::before, ul > li.closed::before {
+	border-radius: 0;
+	border-style: solid;
+	background-color: transparent;
+	height: 0;
+	width: 0;
+	cursor: pointer;
+	top: -0.1em;
+	right: auto;
+	left: -1em;
+}
+
+ul > li.open::before {
+	border-color: #423F37 transparent;
+	border-width: 0.45em 0.35em 0 0.35em;
+}
+
+ul > li.closed::before {
+	border-color: transparent #423F37;
+	border-width: 0.35em 0 0.35em 0.45em;
+}
+
+ul > li.closed > ul {
+	display: none;
 }
 
 ol, ul, dl {
@@ -247,9 +305,11 @@ ol, ul, dl {
     margin-left: 2rem;
     padding: 0;
 }
+
 ol {
     counter-reset: ol;
 }
+
 li + li, dd + dt {
     margin-top: 0.5em;
 }

@@ -14,8 +14,8 @@ class MathsParsedown extends ParsedownExtra {
 		$this->inlineMarkerList .= '-';
 
 		$this->setMarkupEscaped(FALSE);
-
-		if (function_exists('parent::__construct')) {
+		
+		if (is_callable('parent::__construct')) {
 			parent::__construct();
 		}
 	}
